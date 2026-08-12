@@ -3,6 +3,7 @@
   import type { Attachment } from '@quiz-mcp/core';
   import AttachmentView from './AttachmentView.svelte';
   import { useI18n } from '../i18n-svelte.js';
+  import Md from './Md.svelte';
 
   interface Props {
     title?: string;
@@ -23,12 +24,12 @@
   {/if}
 
   <div class="flex items-start justify-between gap-3">
-    <p class="text-base-content text-lg leading-snug">
-      {text}
+    <div class="text-base-content text-lg leading-snug min-w-0 flex-1">
+      <Md content={text} />
       {#if required}
         <span class="text-error" aria-label="required">{t('question.required_mark')}</span>
       {/if}
-    </p>
+    </div>
     {#if typeof score === 'number'}
       <span class="badge badge-ghost badge-sm shrink-0">{score} pts</span>
     {/if}

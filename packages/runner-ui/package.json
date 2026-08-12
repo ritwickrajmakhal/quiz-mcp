@@ -21,8 +21,11 @@
     "@quiz-mcp/core": "workspace:*",
     "@quiz-mcp/ui": "workspace:*",
     "@quiz-mcp/web-components": "workspace:*",
+    "@tailwindcss/typography": "^0.5.20",
     "daisyui": "^5",
+    "highlight.js": "^11",
     "hono": "^4",
+    "katex": "^0.16.0",
     "tailwindcss": "^4"
   },
   "devDependencies": {
