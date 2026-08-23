@@ -4,6 +4,7 @@
     SingleChoiceAnswer,
   } from '@quiz-mcp/core';
   import AttachmentView from '../shared/AttachmentView.svelte';
+  import Md from '../shared/Md.svelte';
 
   interface Props {
     question: SingleChoiceQuestion;
@@ -48,7 +49,7 @@
           onchange={() => select(option.id)}
         />
         <span class="flex min-w-0 grow flex-col gap-2">
-          <span class="label-text text-base-content">{option.label}</span>
+          <span class="label-text text-base-content"><Md content={option.label} inline /></span>
           {#if option.attachment}
             <AttachmentView attachment={option.attachment} />
           {/if}

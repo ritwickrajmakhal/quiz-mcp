@@ -2,6 +2,8 @@
   import type { MatchQuestion, MatchAnswer, MatchPair } from '@quiz-mcp/core';
   import AttachmentView from '../shared/AttachmentView.svelte';
   import { useI18n } from '../i18n-svelte.js';
+  import Md from '../shared/Md.svelte';
+  import MdSelect from '../shared/MdSelect.svelte';
 
   interface Props {
     question: MatchQuestion;
@@ -48,7 +50,7 @@
       >
         <div class="flex min-w-0 flex-col gap-2">
           {#if left.text}
-            <span class="text-base-content">{left.text}</span>
+            <span class="text-base-content"><Md content={left.text} inline /></span>
           {/if}
           {#if left.attachments}
             <div class="flex flex-wrap gap-2">
@@ -61,18 +63,13 @@
 
         <div class="text-base-content/40 hidden justify-center sm:flex" aria-hidden="true">→</div>
 
-        <select
-          class="select select-bordered w-full"
+        <MdSelect
+          options={rightItems.map((r) => ({ id: r.id, text: r.text ?? r.id }))}
           value={selectedRight}
+          placeholder={t('question.match.unset_label')}
           {disabled}
-          onchange={(e) =>
-            setMatch(left.id, (e.currentTarget as HTMLSelectElement).value)}
-        >
-          <option value="">{t('question.match.unset_label')}</option>
-          {#each rightItems as right (right.id)}
-            <option value={right.id}>{right.text ?? right.id}</option>
-          {/each}
-        </select>
+          onChange={(val) => setMatch(left.id, val)}
+        />
       </div>
     {/each}
 </div>

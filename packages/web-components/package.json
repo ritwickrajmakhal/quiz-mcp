@@ -25,7 +25,10 @@
   "dependencies": {
     "@quiz-mcp/core": "workspace:*",
     "@quiz-mcp/ui": "workspace:*",
+    "@tailwindcss/typography": "^0.5.20",
     "daisyui": "^5",
+    "highlight.js": "^11",
+    "katex": "^0.16.0",
     "tailwindcss": "^4"
   },
   "devDependencies": {

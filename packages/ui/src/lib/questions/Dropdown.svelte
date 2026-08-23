@@ -1,6 +1,8 @@
 <script lang="ts">
   import type { DropdownQuestion, DropdownAnswer } from '@quiz-mcp/core';
   import { useI18n } from '../i18n-svelte.js';
+  import Md from '../shared/Md.svelte';
+  import MdSelect from '../shared/MdSelect.svelte';
 
   interface Props {
     question: DropdownQuestion;
@@ -23,16 +25,8 @@
     onChange({ _kind: 'dropdown', questionId: question.id, selections });
   }
 
-  function onSingleChange(e: Event) {
-    const v = (e.currentTarget as HTMLSelectElement).value;
-    emit(v ? [v] : []);
-  }
-
-  function onMultiChange(e: Event) {
-    const el = e.currentTarget as HTMLSelectElement;
-    const picked: string[] = [];
-    for (const opt of el.selectedOptions) picked.push(opt.value);
-    emit(picked);
+  function toggleOption(id: string) {
+    emit(selections.includes(id) ? selections.filter((s) => s !== id) : [...selections, id]);
   }
 
   function toggleTag(v: string) {
@@ -59,31 +53,36 @@
 
 <div class="flex flex-col gap-1">
   {#if question.mode === 'single'}
-    <select
-      class="select select-bordered w-full"
+    <MdSelect
+      options={question.options.map((o) => ({ id: o.id, text: o.label }))}
       value={selections[0] ?? ''}
+      placeholder={t('question.dropdown.placeholder')}
       {disabled}
-      onchange={onSingleChange}
-    >
-      <option value="" disabled>{t('question.dropdown.placeholder')}</option>
-      {#each question.options as option (option.id)}
-        <option value={option.id}>{option.label}</option>
-      {/each}
-    </select>
+      onChange={(val) => emit(val ? [val] : [])}
+    />
   {:else if question.mode === 'multiple'}
-    <select
-      class="select select-bordered h-auto w-full"
-      multiple
-      size={Math.min(8, Math.max(3, question.options.length))}
-      {disabled}
-      onchange={onMultiChange}
-    >
+    <div class="border-base-300 rounded-box flex flex-col gap-1 border p-2">
       {#each question.options as option (option.id)}
-        <option value={option.id} selected={selections.includes(option.id)}>
-          {option.label}
-        </option>
+        {@const checked = selections.includes(option.id)}
+        <label
+          class={[
+            'label hover:bg-base-200 flex cursor-pointer items-start gap-3 rounded-box p-2',
+            checked ? 'bg-primary/5' : '',
+          ]}
+        >
+          <input
+            type="checkbox"
+            class="checkbox checkbox-primary checkbox-sm mt-0.5"
+            {checked}
+            {disabled}
+            onchange={() => toggleOption(option.id)}
+          />
+          <span class="label-text text-base-content">
+            <Md content={option.label} inline />
+          </span>
+        </label>
       {/each}
-    </select>
+    </div>
     <div class="text-base-content/60 mt-1 text-xs">{t('question.dropdown.multiselect_hint')}</div>
   {:else}
     <div class="flex flex-wrap gap-2">
@@ -97,7 +96,7 @@
           {disabled}
           onclick={() => toggleTag(option.id)}
         >
-          {option.label}
+          <Md content={option.label} inline />
         </button>
       {/each}
     </div>

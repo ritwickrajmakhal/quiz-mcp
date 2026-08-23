@@ -1,5 +1,8 @@
+@import "katex/dist/katex.min.css";
+@import "highlight.js/styles/github.min.css";
 @import "tailwindcss";
 @plugin "daisyui";
+@plugin "@tailwindcss/typography";
 
 @source './';
 @source '../../ui/src';

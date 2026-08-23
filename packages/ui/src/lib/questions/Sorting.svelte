@@ -2,6 +2,7 @@
   import type { SortingQuestion, SortingAnswer } from '@quiz-mcp/core';
   import AttachmentView from '../shared/AttachmentView.svelte';
   import { useI18n } from '../i18n-svelte.js';
+  import Md from '../shared/Md.svelte';
 
   interface Props {
     question: SortingQuestion;
@@ -57,7 +58,7 @@
 
           <div class="flex min-w-0 grow flex-col gap-2">
             {#if item.text}
-              <span class="text-base-content">{item.text}</span>
+              <span class="text-base-content"><Md content={item.text} inline /></span>
             {/if}
             {#if item.attachments}
               <div class="flex flex-wrap gap-2">

@@ -3,6 +3,8 @@ export { default as QuestionRenderer } from './lib/QuestionRenderer.svelte';
 
 export { default as QuestionShell } from './lib/shared/QuestionShell.svelte';
 export { default as AttachmentView } from './lib/shared/AttachmentView.svelte';
+export { default as Md } from './lib/shared/Md.svelte';
+export { default as MdSelect } from './lib/shared/MdSelect.svelte';
 
 export { default as SingleChoice } from './lib/questions/SingleChoice.svelte';
 export { default as MultipleChoice } from './lib/questions/MultipleChoice.svelte';

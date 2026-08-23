@@ -31,6 +31,10 @@
     "@quiz-mcp/core": "workspace:*",
     "daisyui": "^5",
     "highlight.js": "^11",
+    "katex": "^0.16.47",
+    "marked": "^18.0.9",
+    "marked-highlight": "^2.2.4",
+    "marked-katex-extension": "^5.1.10",
     "tailwindcss": "^4"
   },
   "devDependencies": {
