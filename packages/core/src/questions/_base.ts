@@ -9,8 +9,15 @@ import { AttachmentSchema } from '../shared/attachment.js';
  */
 export const BaseQuestionFields = {
   id: IdSchema,
-  text: z.string(),
-  title: z.string().optional(),
+  text: z
+    .string()
+    .describe(
+      'Question text. Supports Markdown, code blocks, and KaTeX math ($...$, $$...$$).',
+    ),
+  title: z
+    .string()
+    .optional()
+    .describe('Optional question title. Supports Markdown and KaTeX math.'),
   required: z.boolean().default(false),
   score: z.number().min(0).optional(),
   attachments: z.array(z.array(AttachmentSchema)).optional(),

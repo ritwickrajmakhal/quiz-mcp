@@ -34,7 +34,9 @@ export const startQuizConfig = {
     "Registers a quiz in the runner and (optionally) opens it in the user's " +
     "default browser. The runner assigns a fresh id; do not include one in " +
     "the input. Returns the assigned quizId and the URL to open. The quiz " +
-    "must match the schema returned by get_quiz_format.",
+    "must match the schema returned by get_quiz_format. Quiz title, description, " +
+    "question text, and option labels support Markdown, code blocks, and KaTeX math ($...$, $$...$$). " +
+    "Questions support rich diagrams and visuals (Graphviz trees/graphs/lists, Mermaid, raw SVG, HTML/Canvas) via attachment type 'viz'.",
   inputSchema,
   outputSchema,
 } as const;

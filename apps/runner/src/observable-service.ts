@@ -12,8 +12,8 @@ export type FinishHook = (ctx: FinishHookCtx) => Promise<void>;
 export function withFinishHook(inner: QuizService, onFinish: FinishHook): QuizService {
   return {
     ...inner,
-    async finishQuiz(quizId, answers) {
-      await inner.finishQuiz(quizId, answers);
+    async finishQuiz(quizId, answers, meta) {
+      await inner.finishQuiz(quizId, answers, meta);
       const [quiz, state] = await Promise.all([
         inner.getQuiz(quizId),
         inner.getState(quizId),

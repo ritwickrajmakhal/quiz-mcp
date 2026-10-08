@@ -57,7 +57,12 @@ export const createRunnerApi = (service: QuizService) =>
       for (const [qid, a] of Object.entries(answers as Record<string, unknown>)) {
         if (isAnswerLike(a)) cleaned[qid] = a;
       }
-      await service.finishQuiz(quizId, cleaned);
+      const rawTimeSpent = (payload as { timeSpentSeconds?: unknown })?.timeSpentSeconds;
+      const timeSpentSeconds =
+        typeof rawTimeSpent === "number" && rawTimeSpent >= 0
+          ? Math.round(rawTimeSpent)
+          : undefined;
+      await service.finishQuiz(quizId, cleaned, { timeSpentSeconds });
       return c.body(null, 204);
     })
     .get("/:quizId/answer", async (c) => {

@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 import { Command } from "commander";
 import { newId, QuizSchema } from "@quiz-mcp/core";
 import { runMcpStdio } from "./mcp-command.js";
+import { runMcpSse } from "./sse-command.js";
 
 const SCHEMA_URL =
   "https://raw.githubusercontent.com/karerckor/quiz-mcp/main/schema/quiz.schema.json";
@@ -27,6 +28,14 @@ program
   )
   .action(async () => {
     await runMcpStdio();
+  });
+
+program
+  .command("sse")
+  .description("Run the MCP server as a persistent HTTP/SSE daemon")
+  .option("-p, --port <port>", "Port to listen on", "8765")
+  .action(async (opts: { port: string }) => {
+    await runMcpSse(parseInt(opts.port, 10));
   });
 
 program

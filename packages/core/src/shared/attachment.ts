@@ -17,8 +17,13 @@ export const CodeAttachmentSchema = z.object({
 });
 export type CodeAttachment = z.infer<typeof CodeAttachmentSchema>;
 
+import { VizAttachmentSchema, type VizAttachment } from './viz.js';
+
 export const AttachmentSchema = z.discriminatedUnion('type', [
   FileAttachmentSchema,
   CodeAttachmentSchema,
+  VizAttachmentSchema,
 ]);
 export type Attachment = z.infer<typeof AttachmentSchema>;
+export { VizAttachmentSchema, type VizAttachment };
+

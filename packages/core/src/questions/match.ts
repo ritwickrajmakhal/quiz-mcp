@@ -5,7 +5,7 @@ import { BaseQuestionFields } from './_base.js';
 
 export const MatchOptionSchema = z.object({
   id: IdSchema,
-  text: z.string().optional(),
+  text: z.string().optional().describe('Option text. Supports Markdown and KaTeX math.'),
   attachments: z.array(AttachmentSchema).optional(),
 });
 export type MatchOption = z.infer<typeof MatchOptionSchema>;

@@ -30,8 +30,9 @@ export class HostedService implements QuizService {
   async finishQuiz(
     quizId: string,
     answers: Record<string, Answer>,
+    meta?: { timeSpentSeconds?: number },
   ): Promise<void> {
-    return this.inner.finishQuiz(quizId, answers);
+    return this.inner.finishQuiz(quizId, answers, meta);
   }
 
   async getState(quizId: string): Promise<QuizState> {

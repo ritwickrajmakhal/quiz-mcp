@@ -74,6 +74,15 @@ export function createRunnerServer(options: RunnerServerOptions): Hono {
     }),
   );
 
+  app.get("/calculator", (c) => c.redirect("/calculator/index.html", 302));
+
+  app.use(
+    "/calculator/*",
+    serveStatic({
+      root: assets.getRunnerUiDistDir(),
+    }),
+  );
+
   if (config?.defaultQuizId) {
     const fallback = config.defaultQuizId;
     app.get("/", (c) => c.redirect(`/${fallback}`, 302));

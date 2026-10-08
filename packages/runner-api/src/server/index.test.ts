@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Quiz } from "@quiz-mcp/core";
 import { QuizNotFoundError, type QuizService } from "../service.js";
-import { createRunnerServer } from "./index.js";
+import { createRunnerServer, DEFAULT_THEME } from "./index.js";
 
 const MINI_QUIZ: Quiz = {
   id: "mini",
@@ -64,7 +64,7 @@ describe("createRunnerServer", () => {
     const app = createRunnerServer({ service: inMemoryService() });
     const body = await (await app.request("/mini")).text();
     expect(body).toContain('id="quiz-theme"');
-    expect(body).toContain("--color-primary:oklch(79% 0.184 86.047)");
+    expect(body).toContain(`--color-primary:${DEFAULT_THEME.primary}`);
   });
 
   it("omits <style id=\"quiz-theme\"> when theme is explicitly empty", async () => {
@@ -112,5 +112,20 @@ describe("createRunnerServer", () => {
     });
     expect(res.status).toBe(204);
     expect(calls).toHaveLength(1);
+  });
+
+  it("redirects /calculator to /calculator/index.html", async () => {
+    const app = createRunnerServer({ service: inMemoryService() });
+    const res = await app.request("/calculator");
+    expect(res.status).toBe(302);
+    expect(res.headers.get("location")).toBe("/calculator/index.html");
+  });
+
+  it("serves /calculator/index.html statically", async () => {
+    const app = createRunnerServer({ service: inMemoryService() });
+    const res = await app.request("/calculator/index.html");
+    expect(res.status).toBe(200);
+    const text = await res.text();
+    expect(text).toContain("SCIENTIFIC CALCULATOR");
   });
 });

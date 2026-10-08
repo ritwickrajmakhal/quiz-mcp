@@ -71,12 +71,15 @@
     );
   }
 
-  function handleFinish(final: Record<string, Answer>) {
+  function handleFinish(
+    final: Record<string, Answer>,
+    meta?: { timeSpentSeconds?: number },
+  ) {
     const report = validateQuiz(quiz, final);
     if (report.ok) {
       hostEl.dispatchEvent(
         new CustomEvent<QuizFinishEventDetail>('quiz-finish', {
-          detail: { answers: final },
+          detail: { answers: final, timeSpentSeconds: meta?.timeSpentSeconds },
           bubbles: true,
           composed: true,
         }),

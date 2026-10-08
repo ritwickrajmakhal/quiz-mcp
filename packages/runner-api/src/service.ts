@@ -12,6 +12,9 @@ export class QuizNotFoundError extends Error {
 export type QuizState = {
   finished: boolean;
   answers: Record<string, Answer>;
+  startedAt?: string;
+  finishedAt?: string;
+  timeSpentSeconds?: number;
 };
 
 export interface QuizService {
@@ -23,6 +26,10 @@ export interface QuizService {
   quizExists(quizId: string): Promise<boolean>;
   getQuiz(quizId: string): Promise<Quiz>;
   saveAnswer(quizId: string, answer: Answer): Promise<void>;
-  finishQuiz(quizId: string, answers: Record<string, Answer>): Promise<void>;
+  finishQuiz(
+    quizId: string,
+    answers: Record<string, Answer>,
+    meta?: { timeSpentSeconds?: number },
+  ): Promise<void>;
   getState(quizId: string): Promise<QuizState>;
 }

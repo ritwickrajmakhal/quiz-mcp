@@ -5,7 +5,7 @@ import { OptionSchema } from './single-choice.js';
 
 export const TextPartSchema = z.object({
   _kind: z.literal('text'),
-  content: z.string(),
+  content: z.string().describe('Text segment. Supports Markdown and KaTeX math.'),
 });
 export type TextPart = z.infer<typeof TextPartSchema>;
 

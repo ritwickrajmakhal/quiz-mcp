@@ -7,10 +7,17 @@ export {
   AttachmentSchema,
   FileAttachmentSchema,
   CodeAttachmentSchema,
+  VizAttachmentSchema,
   type Attachment,
   type FileAttachment,
   type CodeAttachment,
+  type VizAttachment,
 } from './shared/attachment.js';
+export {
+  VizEngineSchema,
+  type VizEngine,
+} from './shared/viz.js';
+
 
 export {
   QuestionSchema,

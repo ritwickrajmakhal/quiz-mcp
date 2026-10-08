@@ -12,6 +12,9 @@ type StoredRecord = {
 	answers: Record<string, Answer>;
 	finished: boolean;
 	expiresAt: number;
+	startedAt?: string;
+	finishedAt?: string;
+	timeSpentSeconds?: number;
 };
 
 export class QuizService implements QuizServiceContract {
@@ -33,6 +36,7 @@ export class QuizService implements QuizServiceContract {
 			answers: {},
 			finished: false,
 			expiresAt,
+			startedAt: new Date().toISOString(),
 		};
 		await this.kv.put(this.key(quiz.id), JSON.stringify(record), {
 			expirationTtl: this.ttlSeconds,
@@ -57,16 +61,30 @@ export class QuizService implements QuizServiceContract {
 		await this.write(record);
 	}
 
-	async finishQuiz(quizId: string, answers: Record<string, Answer>): Promise<void> {
+	async finishQuiz(
+		quizId: string,
+		answers: Record<string, Answer>,
+		meta?: { timeSpentSeconds?: number },
+	): Promise<void> {
 		const record = await this.read(quizId);
 		record.answers = { ...answers };
 		record.finished = true;
+		record.finishedAt = new Date().toISOString();
+		if (meta?.timeSpentSeconds !== undefined) {
+			record.timeSpentSeconds = meta.timeSpentSeconds;
+		}
 		await this.write(record);
 	}
 
 	async getState(quizId: string): Promise<QuizState> {
 		const record = await this.read(quizId);
-		return { finished: record.finished, answers: record.answers };
+		return {
+			finished: record.finished,
+			answers: record.answers,
+			startedAt: record.startedAt,
+			finishedAt: record.finishedAt,
+			timeSpentSeconds: record.timeSpentSeconds,
+		};
 	}
 
 	async deleteQuiz(quizId: string): Promise<void> {

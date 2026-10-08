@@ -15,10 +15,17 @@
           "minLength": 1
         },
         "title": {
-          "type": "string"
+          "type": "string",
+          "description": "Quiz title. Supports Markdown and KaTeX math."
         },
         "description": {
-          "type": "string"
+          "type": "string",
+          "description": "Optional quiz description. Supports Markdown, syntax-highlighted code blocks (```lang), and KaTeX math ($...$, $$...$$)."
+        },
+        "timeLimitSeconds": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "description": "Optional target duration in seconds (e.g. 900 for 15 minutes) for time management practice. Does not auto-submit; when time runs out, the timer shows overtime (+mm:ss) and reports total time taken to the AI."
         },
         "questions": {
           "type": "array",
@@ -35,10 +42,12 @@
                     "$ref": "#/definitions/Quiz/properties/id"
                   },
                   "text": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Question text. Supports Markdown, code blocks, and KaTeX math ($...$, $$...$$)."
                   },
                   "title": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Optional question title. Supports Markdown and KaTeX math."
                   },
                   "required": {
                     "type": "boolean",
@@ -108,6 +117,53 @@
                               "code"
                             ],
                             "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "$ref": "#/definitions/Quiz/properties/id"
+                              },
+                              "type": {
+                                "type": "string",
+                                "const": "viz"
+                              },
+                              "engine": {
+                                "type": "string",
+                                "enum": [
+                                  "mermaid",
+                                  "graphviz",
+                                  "svg",
+                                  "html_canvas"
+                                ],
+                                "description": "Rendering engine: \"mermaid\" for declarative diagrams/charts, \"graphviz\" for trees/lists/graphs/state machines, \"svg\" for custom vector geometry/circuits, or \"html_canvas\" for dynamic scripts/simulations."
+                              },
+                              "content": {
+                                "type": "string",
+                                "description": "The visualization source: Mermaid syntax, Graphviz DOT syntax, raw SVG string (<svg>...</svg>), or self-contained HTML/JS code for canvas rendering."
+                              },
+                              "title": {
+                                "type": "string",
+                                "description": "Optional caption/title displayed below the visualization."
+                              },
+                              "height": {
+                                "type": "integer",
+                                "minimum": 80,
+                                "maximum": 1200,
+                                "description": "Explicit display height in pixels (defaults to auto or 320px)."
+                              },
+                              "aspectRatio": {
+                                "type": "string",
+                                "description": "Optional aspect ratio, e.g. \"16/9\", \"4/3\", \"1/1\"."
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "type",
+                              "engine",
+                              "content"
+                            ],
+                            "additionalProperties": false
                           }
                         ]
                       }
@@ -130,7 +186,8 @@
                           "$ref": "#/definitions/Quiz/properties/id"
                         },
                         "label": {
-                          "type": "string"
+                          "type": "string",
+                          "description": "Option label. Supports Markdown and inline KaTeX math ($...$)."
                         },
                         "attachment": {
                           "$ref": "#/definitions/Quiz/properties/questions/items/anyOf/0/properties/attachments/items/items"
@@ -384,7 +441,8 @@
                               "const": "text"
                             },
                             "content": {
-                              "type": "string"
+                              "type": "string",
+                              "description": "Text segment. Supports Markdown and KaTeX math."
                             }
                           },
                           "required": [
@@ -490,7 +548,8 @@
                               "$ref": "#/definitions/Quiz/properties/id"
                             },
                             "text": {
-                              "type": "string"
+                              "type": "string",
+                              "description": "Option text. Supports Markdown and KaTeX math."
                             },
                             "attachments": {
                               "type": "array",
@@ -561,10 +620,12 @@
                     "default": 1
                   },
                   "minLabel": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Label for minimum value. Supports Markdown and KaTeX math."
                   },
                   "maxLabel": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Label for maximum value. Supports Markdown and KaTeX math."
                   }
                 },
                 "required": [
@@ -610,7 +671,8 @@
                           "$ref": "#/definitions/Quiz/properties/id"
                         },
                         "text": {
-                          "type": "string"
+                          "type": "string",
+                          "description": "Item text. Supports Markdown and KaTeX math."
                         },
                         "attachments": {
                           "type": "array",
@@ -702,7 +764,7 @@
         "title",
         "questions"
       ],
-      "additionalProperties": false
+      "additionalProperties": true
     }
   }
 }

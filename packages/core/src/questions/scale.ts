@@ -7,7 +7,7 @@ export const ScaleQuestionSchema = z.object({
   min: z.number(),
   max: z.number(),
   step: z.number().positive().default(1),
-  minLabel: z.string().optional(),
-  maxLabel: z.string().optional(),
+  minLabel: z.string().optional().describe('Label for minimum value. Supports Markdown and KaTeX math.'),
+  maxLabel: z.string().optional().describe('Label for maximum value. Supports Markdown and KaTeX math.'),
 });
 export type ScaleQuestion = z.infer<typeof ScaleQuestionSchema>;

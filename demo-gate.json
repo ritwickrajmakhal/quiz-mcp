@@ -1,0 +1,58 @@
+﻿{
+    "questions":  [
+                      {
+                          "id":  "q1",
+                          "text":  "In a paging system with a **32-bit virtual address space** and a page size of **\\text{ KB}$**, each page table entry takes **\\text{ bytes}$**. If every page table page must fit within a single page frame, how many levels of page table are needed?",
+                          "required":  true,
+                          "options":  [
+                                          {
+                                              "id":  "opt1",
+                                              "label":  "2 levels"
+                                          },
+                                          {
+                                              "id":  "opt2",
+                                              "label":  "3 levels"
+                                          },
+                                          {
+                                              "id":  "opt3",
+                                              "label":  "4 levels"
+                                          },
+                                          {
+                                              "id":  "opt4",
+                                              "label":  "1 level"
+                                          }
+                                      ],
+                          "title":  "Hierarchical Paging (OS)",
+                          "_kind":  "single_choice"
+                      },
+                      {
+                          "id":  "q2",
+                          "text":  "Consider the language:\n\nL = \\{a^n b^n c^n \\mid n \\ge 1\\}\n\nWhich of the following is the most restrictive Chomsky hierarchy class for True",
+                          "required":  true,
+                          "options":  [
+                                          {
+                                              "id":  "optA",
+                                              "label":  "Regular"
+                                          },
+                                          {
+                                              "id":  "optB",
+                                              "label":  "Context-Free (DCFL)"
+                                          },
+                                          {
+                                              "id":  "optC",
+                                              "label":  "Context-Sensitive (Not Context-Free)"
+                                          },
+                                          {
+                                              "id":  "optD",
+                                              "label":  "Recursively Enumerable only"
+                                          }
+                                      ],
+                          "title":  "Language Classification (TOC)",
+                          "_kind":  "single_choice"
+                      }
+                  ],
+    "title":  "GATE Practice: OS \u0026 Theory of Computation",
+    "description":  "A 2-question quick checkpoint on OS and TOC. Target Time: 90 seconds (1.5 minutes). Observe the countdown timer at the top!",
+    "id":  "gate-test",
+    "timeLimitSeconds":  90
+}

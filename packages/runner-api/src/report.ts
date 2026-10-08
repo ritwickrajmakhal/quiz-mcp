@@ -63,6 +63,10 @@ export const AnswersReportSchema = z.object({
   quizId: IdSchema,
   title: z.string(),
   finished: z.boolean(),
+  timeSpentSeconds: z.number().int().nonnegative().optional(),
+  targetTimeSeconds: z.number().int().positive().optional(),
+  overtimeSeconds: z.number().int().nonnegative().optional(),
+  isOvertime: z.boolean().optional(),
   items: z.array(
     z.object({
       question: CompactQuestionSchema,
@@ -131,10 +135,24 @@ function toCompactQuestion(q: Question): CompactQuestion {
 }
 
 export function toAnswersReport(quiz: Quiz, state: QuizState): AnswersReport {
+  const timeSpentSeconds = state.timeSpentSeconds;
+  const targetTimeSeconds = quiz.timeLimitSeconds;
+  let overtimeSeconds: number | undefined;
+  let isOvertime: boolean | undefined;
+
+  if (timeSpentSeconds !== undefined && targetTimeSeconds !== undefined) {
+    overtimeSeconds = Math.max(0, timeSpentSeconds - targetTimeSeconds);
+    isOvertime = timeSpentSeconds > targetTimeSeconds;
+  }
+
   return {
     quizId: quiz.id,
     title: quiz.title,
     finished: state.finished,
+    ...(timeSpentSeconds !== undefined ? { timeSpentSeconds } : {}),
+    ...(targetTimeSeconds !== undefined ? { targetTimeSeconds } : {}),
+    ...(overtimeSeconds !== undefined ? { overtimeSeconds } : {}),
+    ...(isOvertime !== undefined ? { isOvertime } : {}),
     items: quiz.questions.map((q) => ({
       question: toCompactQuestion(q),
       answer: state.answers[q.id] ?? null,

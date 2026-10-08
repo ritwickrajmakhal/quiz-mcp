@@ -2,8 +2,10 @@
   import type { Attachment } from '@quiz-mcp/core';
   import hljs from 'highlight.js/lib/common';
   import hljsTheme from 'highlight.js/styles/github-dark.css?inline';
+  import VizView from './viz/VizView.svelte';
 
   interface Props {
+
     attachment: Attachment;
   }
 
@@ -59,4 +61,7 @@
     <pre><code
         class="hljs language-{attachment.language}">{@html highlightCode(attachment.code, attachment.language)}</code></pre>
   </div>
+{:else if attachment.type === 'viz'}
+  <VizView {attachment} />
 {/if}
+

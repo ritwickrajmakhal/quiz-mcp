@@ -95,4 +95,36 @@ describe("toAnswersReport", () => {
     const parsed = AnswersReportSchema.safeParse(report);
     expect(parsed.success).toBe(true);
   });
+
+  it("includes timing fields and calculates overtime correctly", () => {
+    const timedQuiz: Quiz = {
+      ...SHORT_TEXT_QUIZ,
+      timeLimitSeconds: 300, // 5 minutes
+    };
+
+    // Case 1: finished within time (250s)
+    const reportWithin = toAnswersReport(timedQuiz, {
+      finished: true,
+      answers: {},
+      timeSpentSeconds: 250,
+    });
+    expect(reportWithin.timeSpentSeconds).toBe(250);
+    expect(reportWithin.targetTimeSeconds).toBe(300);
+    expect(reportWithin.overtimeSeconds).toBe(0);
+    expect(reportWithin.isOvertime).toBe(false);
+
+    // Case 2: finished overtime (350s -> 50s overtime)
+    const reportOvertime = toAnswersReport(timedQuiz, {
+      finished: true,
+      answers: {},
+      timeSpentSeconds: 350,
+    });
+    expect(reportOvertime.timeSpentSeconds).toBe(350);
+    expect(reportOvertime.targetTimeSeconds).toBe(300);
+    expect(reportOvertime.overtimeSeconds).toBe(50);
+    expect(reportOvertime.isOvertime).toBe(true);
+
+    const parsed = AnswersReportSchema.safeParse(reportOvertime);
+    expect(parsed.success).toBe(true);
+  });
 });

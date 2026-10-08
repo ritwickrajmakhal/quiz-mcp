@@ -10,7 +10,7 @@ const SCHEMA_ID = 'https://raw.githubusercontent.com/karerckor/quiz-mcp/main/sch
 // silently. Always run `pnpm schema:gen` after touching questions/index.ts so
 // external consumers of the JSON Schema pick up the new structure.
 export function buildQuizJsonSchema(): Record<string, unknown> {
-  const generated = zodToJsonSchema(QuizSchema, {
+  const generated = zodToJsonSchema(QuizSchema as any, {
     name: 'Quiz',
     target: 'jsonSchema7',
     $refStrategy: 'root',

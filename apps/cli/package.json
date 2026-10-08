@@ -9,12 +9,12 @@
   "publishConfig": { "access": "public" },
   "files": ["dist"],
   "scripts": {
-    "build": "pnpm clean && tsup",
+    "build": "pnpm run clean && tsup",
     "dev": "tsup --watch",
     "lint": "echo 'lint ok'",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "clean": "rm -rf dist *.tsbuildinfo"
+    "clean": "rimraf --glob dist *.tsbuildinfo"
   },
   "dependencies": {
     "@hono/node-server": "^1.19.14",

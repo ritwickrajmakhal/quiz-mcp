@@ -5,6 +5,7 @@ export type QuizAnswerEventDetail = Answer;
 
 export interface QuizFinishEventDetail {
   answers: Record<string, Answer>;
+  timeSpentSeconds?: number;
 }
 
 export interface QuizValidationErrorEventDetail {

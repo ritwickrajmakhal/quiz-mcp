@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "hono/jsx/dom";
 import type { Quiz } from "@quiz-mcp/core";
 import { extractIssues, type Issue, type ValidateQuizResult } from "@quiz-mcp/core/validation";
 import { makeTranslator, type I18nDict } from "@quiz-mcp/ui/i18n";
+import { CalculatorWidget } from "./calculator-widget";
 import { formatIssue } from "./format-issue";
 
 type ValidationErrorEntry = {
@@ -47,6 +48,13 @@ const themeVars = readPayload<Record<string, string>>("quiz-theme-vars", {});
 const themeSheet = buildShadowThemeSheet(themeVars);
 const t = makeTranslator(i18nDict);
 
+function formatDuration(seconds: number): string {
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  if (m === 0) return `${s}s`;
+  return `${m}m ${s.toString().padStart(2, "0")}s`;
+}
+
 export type QuizHostProps = {
   quizId: string;
   quiz: Quiz;
@@ -56,6 +64,7 @@ export const QuizHost = ({ quizId, quiz }: QuizHostProps) => {
   const playerRef = useRef<QuizPlayerElement | null>(null);
   const [errors, setErrors] = useState<ValidationErrorEntry[] | null>(null);
   const [finished, setFinished] = useState(false);
+  const [timeSpent, setTimeSpent] = useState<number | null>(null);
   const [ready, setReady] = useState(false);
 
   const apiBase = window.location.pathname.replace(/\/+$/, "") || `/${quizId}`;
@@ -108,13 +117,22 @@ export const QuizHost = ({ quizId, quiz }: QuizHostProps) => {
     };
 
     const onFinish = (event: Event) => {
-      const detail = (event as CustomEvent).detail as { answers: unknown };
+      const detail = (event as CustomEvent).detail as {
+        answers: unknown;
+        timeSpentSeconds?: number;
+      };
       setErrors(null);
       setFinished(true);
+      if (typeof detail.timeSpentSeconds === "number") {
+        setTimeSpent(detail.timeSpentSeconds);
+      }
       fetch(`${apiBase}/finish`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ answers: detail.answers }),
+        body: JSON.stringify({
+          answers: detail.answers,
+          timeSpentSeconds: detail.timeSpentSeconds,
+        }),
       }).catch((err) => console.error("Failed to finish quiz:", err));
     };
 
@@ -135,6 +153,11 @@ export const QuizHost = ({ quizId, quiz }: QuizHostProps) => {
   };
 
   if (finished) {
+    const target = quiz.timeLimitSeconds;
+    const hasTarget = typeof target === "number" && target > 0;
+    const isOvertime = hasTarget && typeof timeSpent === "number" && timeSpent > target;
+    const overtime = isOvertime && typeof timeSpent === "number" ? timeSpent - target : 0;
+
     return (
       <div class="card bg-base-200">
         <div class="card-body items-center text-center gap-6 py-12">
@@ -149,6 +172,41 @@ export const QuizHost = ({ quizId, quiz }: QuizHostProps) => {
               {t("complete.text", { title: quiz.title })}
             </p>
           </div>
+
+          {typeof timeSpent === "number" && (
+            <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+              <div class="flex items-center gap-2 rounded-xl bg-base-100 border border-base-300 px-4 py-2.5 shadow-xs">
+                <span class="text-xs uppercase tracking-wider font-semibold text-base-content/60">
+                  Time taken:
+                </span>
+                <span class="font-mono font-bold text-base-content">
+                  {formatDuration(timeSpent)}
+                </span>
+                {hasTarget && (
+                  isOvertime ? (
+                    <span class="badge badge-error badge-sm">
+                      +{formatDuration(overtime)} overtime
+                    </span>
+                  ) : (
+                    <span class="badge badge-success badge-sm">
+                      within target
+                    </span>
+                  )
+                )}
+              </div>
+
+              {hasTarget && (
+                <div class="flex items-center gap-2 rounded-xl bg-base-100 border border-base-300 px-4 py-2.5 shadow-xs">
+                  <span class="text-xs uppercase tracking-wider font-semibold text-base-content/60">
+                    Target:
+                  </span>
+                  <span class="font-mono font-bold text-base-content/80">
+                    {formatDuration(target)}
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     );
@@ -194,6 +252,7 @@ export const QuizHost = ({ quizId, quiz }: QuizHostProps) => {
         quiz={JSON.stringify(quiz)}
         style={ready ? undefined : "visibility: hidden"}
       />
+      <CalculatorWidget />
     </>
   );
 };

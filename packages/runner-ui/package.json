@@ -15,7 +15,7 @@
     "lint": "echo 'lint ok'",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "clean": "rm -rf dist *.tsbuildinfo"
+    "clean": "rimraf --glob dist *.tsbuildinfo"
   },
   "dependencies": {
     "@quiz-mcp/core": "workspace:*",

@@ -17,7 +17,7 @@
     "lint": "echo 'lint ok'",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "clean": "rm -rf dist *.tsbuildinfo"
+    "clean": "rimraf --glob dist *.tsbuildinfo"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12",

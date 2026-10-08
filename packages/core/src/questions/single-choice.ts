@@ -5,7 +5,9 @@ import { BaseQuestionFields } from './_base.js';
 
 export const OptionSchema = z.object({
   id: IdSchema,
-  label: z.string(),
+  label: z
+    .string()
+    .describe('Option label. Supports Markdown and inline KaTeX math ($...$).'),
   attachment: AttachmentSchema.optional(),
 });
 export type Option = z.infer<typeof OptionSchema>;

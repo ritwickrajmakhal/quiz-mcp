@@ -16,6 +16,16 @@ export const DEFAULT_I18N = {
   // Completion screen
   "complete.title": "Quiz submitted",
   "complete.text": "Your answers have been recorded. Thanks for taking “{title}”.",
+  "complete.time_taken": "Time taken: {time}",
+  "complete.target_time": "Target time: {time}",
+  "complete.overtime": "Overtime: +{time}",
+  "complete.within_time": "Within target time",
+
+  // Timer
+  "timer.remaining": "{time} left",
+  "timer.overtime": "+{time} overtime",
+  "timer.elapsed": "{time}",
+  "timer.target": "Target: {time}",
 
   // Validation alert
   "validation.title": "Please review your answers",

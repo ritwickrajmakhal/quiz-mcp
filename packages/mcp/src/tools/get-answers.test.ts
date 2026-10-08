@@ -225,4 +225,81 @@ describe("get_answers handler", () => {
     expect(mcq).not.toHaveProperty("minSelections");
     expect(mcq).not.toHaveProperty("maxSelections");
   });
+
+  it("filters to a specific question when questionId is provided", async () => {
+    const handler = makeGetAnswersHandler(fakeService({ quiz: THREE_Q_QUIZ }));
+    const result = await handler({ quizId: "q3", questionId: "b" });
+
+    const sc = result.structuredContent as {
+      items: Array<{ question: { id: string } }>;
+    };
+    expect(sc.items).toHaveLength(1);
+    expect(sc.items[0]!.question.id).toBe("b");
+  });
+
+  it("paginates questions with offset and limit", async () => {
+    const handler = makeGetAnswersHandler(fakeService({ quiz: THREE_Q_QUIZ }));
+    const result = await handler({ quizId: "q3", offset: 1, limit: 1 });
+
+    const sc = result.structuredContent as {
+      items: Array<{ question: { id: string } }>;
+    };
+    expect(sc.items).toHaveLength(1);
+    expect(sc.items[0]!.question.id).toBe("b");
+  });
+
+  it("safeguards against large outputs exceeding 15000 characters", async () => {
+    const longQuestions = Array.from({ length: 50 }, (_, i) => ({
+      _kind: "short_text" as const,
+      id: `q${i}`,
+      text: `Question ${i}: `.repeat(50),
+      required: false,
+    }));
+    const largeQuiz: Quiz = {
+      id: "large",
+      title: "Large Quiz",
+      questions: longQuestions,
+    };
+    const handler = makeGetAnswersHandler(fakeService({ quiz: largeQuiz }));
+    const result = await handler({ quizId: "large" });
+
+    const text = (result.content[0] as { type: "text"; text: string }).text;
+    expect(text.length).toBeLessThan(16000);
+    expect(text).toContain("[Note: Truncated to first");
+  });
+
+  it("reports timing and overtime metrics accurately for time management practice", async () => {
+    const timedQuiz: Quiz = {
+      id: "timed",
+      title: "GATE Algorithms",
+      timeLimitSeconds: 600, // 10 minutes
+      questions: [{ _kind: "short_text", id: "q1", text: "Complexity of QuickSort?", required: false }],
+    };
+    // 750 seconds = 12m 30s (+2m 30s overtime)
+    const handler = makeGetAnswersHandler(
+      fakeService({
+        quiz: timedQuiz,
+        state: {
+          finished: true,
+          answers: { q1: { _kind: "short_text", questionId: "q1", text: "O(n log n)" } },
+          timeSpentSeconds: 750,
+        },
+      }),
+    );
+    const result = await handler({ quizId: "timed" });
+
+    expect(result.structuredContent).toMatchObject({
+      quizId: "timed",
+      title: "GATE Algorithms",
+      finished: true,
+      timeSpentSeconds: 750,
+      targetTimeSeconds: 600,
+      overtimeSeconds: 150,
+      isOvertime: true,
+    });
+
+    const text = (result.content[0] as { type: "text"; text: string }).text;
+    expect(text).toContain("time taken: 12m 30s (target: 10m 00s, +2m 30s overtime)");
+  });
 });
+

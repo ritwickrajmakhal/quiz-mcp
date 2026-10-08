@@ -5,7 +5,7 @@ import { BaseQuestionFields } from './_base.js';
 
 export const SortItemSchema = z.object({
   id: IdSchema,
-  text: z.string().optional(),
+  text: z.string().optional().describe('Item text. Supports Markdown and KaTeX math.'),
   attachments: z.array(AttachmentSchema).optional(),
 });
 export type SortItem = z.infer<typeof SortItemSchema>;

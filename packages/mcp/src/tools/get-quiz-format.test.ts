@@ -17,13 +17,23 @@ describe("get_quiz_format handler", () => {
     expect(schema).not.toHaveProperty("properties.id");
   });
 
-  it("includes a pretty-printed JSON Schema in text content", async () => {
+  it("includes a compact JSON Schema under 16000 chars in text content", async () => {
     const result = await getQuizFormatHandler();
     expect(result.content).toHaveLength(1);
     const block = result.content[0];
     expect(block.type).toBe("text");
     const text = (block as { type: "text"; text: string }).text;
-    expect(text).toContain("\"type\": \"object\"");
+    expect(text).toContain("\"type\":\"object\"");
+    expect(text.length).toBeLessThan(16000);
     expect(() => JSON.parse(text)).not.toThrow();
   });
+
+  it("filters schema by questionType when provided", async () => {
+    const result = await getQuizFormatHandler({ questionType: "single_choice" });
+    const text = (result.content[0] as { type: "text"; text: string }).text;
+    expect(text.length).toBeLessThan(3500);
+    const parsed = JSON.parse(text);
+    expect(parsed.properties.questions.items.properties._kind.const).toBe("single_choice");
+  });
+
 });

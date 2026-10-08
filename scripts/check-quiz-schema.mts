@@ -14,10 +14,10 @@ function fail(message: string): never {
 }
 
 function checkFreshness(): string {
-  const expected = JSON.stringify(buildQuizJsonSchema(), null, 2) + '\n';
+  const expected = (JSON.stringify(buildQuizJsonSchema(), null, 2) + '\n').replace(/\r\n/g, '\n');
   let actual: string;
   try {
-    actual = readFileSync(SCHEMA_PATH, 'utf8');
+    actual = readFileSync(SCHEMA_PATH, 'utf8').replace(/\r\n/g, '\n');
   } catch {
     fail(`${SCHEMA_PATH} is missing — run \`pnpm schema:gen\` and commit.`);
   }

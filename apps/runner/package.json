@@ -9,12 +9,12 @@
   "scripts": {
     "dev": "concurrently -k -n ui,runner -c cyan,magenta \"pnpm --filter @quiz-mcp/runner-ui dev\" \"pnpm run dev:server\"",
     "dev:server": "tsc && concurrently -k \"tsc -w --preserveWatchOutput\" \"node --watch dist/index.js\"",
-    "build": "pnpm clean && tsup",
+    "build": "pnpm run clean && tsup",
     "start": "node dist/cli.js",
     "lint": "echo 'lint ok'",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "clean": "rm -rf dist *.tsbuildinfo"
+    "clean": "rimraf --glob dist *.tsbuildinfo"
   },
   "dependencies": {
     "@hono/node-server": "^1.19.14",
