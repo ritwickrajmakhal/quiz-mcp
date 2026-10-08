@@ -1,5 +1,5 @@
 {
-  "name": "@quiz-mcp/cli",
+  "name": "@ritwickrajmakhal/quiz-mcp",
   "version": "2.0.1",
   "type": "module",
   "main": "./dist/index.js",

@@ -7,7 +7,7 @@ import { runMcpStdio } from "./mcp-command.js";
 import { runMcpSse } from "./sse-command.js";
 
 const SCHEMA_URL =
-  "https://raw.githubusercontent.com/karerckor/quiz-mcp/main/schema/quiz.schema.json";
+  "https://raw.githubusercontent.com/ritwickrajmakhal/quiz-mcp/main/schema/quiz.schema.json";
 
 function slugify(input: string): string {
   const slug = input
