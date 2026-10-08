@@ -1,17 +1,32 @@
-# @quiz-mcp/cli
+# @ritwickrajmakhal/quiz-mcp
 
-Command-line entry point for **quiz-mcp** — an MCP server that lets a model hand off
+Command-line entry point for **quiz-mcp** — an MCP server that lets an AI model hand off
 interactive quizzes to a human through a local browser UI.
 
 The CLI ships a single binary, `quiz-mcp`, which an MCP client (Claude Desktop,
-Cursor, Claude Code, etc.) launches over stdio.
+Cursor, Claude Code, Antigravity, etc.) launches over stdio.
+
+## Quick Start (MCP Client Config)
+
+Add this to your MCP settings file (e.g., `claude_desktop_config.json`, Cursor MCP settings, or `.mcp.json`):
+
+```json
+{
+  "mcpServers": {
+    "quiz-mcp": {
+      "command": "npx",
+      "args": ["-y", "@ritwickrajmakhal/quiz-mcp", "mcp"]
+    }
+  }
+}
+```
 
 ## Install
 
 ```bash
-npm install -g @quiz-mcp/cli
+npm install -g @ritwickrajmakhal/quiz-mcp
 # or run on demand without installing
-npx @quiz-mcp/cli
+npx @ritwickrajmakhal/quiz-mcp
 ```
 
 ## Commands
@@ -47,13 +62,13 @@ Refuses to overwrite an existing file unless `--force` is passed.
 
 ```bash
 # writes ./sample-quiz.quiz.json
-npx @quiz-mcp/cli create "Sample quiz"
+npx @ritwickrajmakhal/quiz-mcp create "Sample quiz"
 
 # explicit path
-npx @quiz-mcp/cli create "Sample quiz" ./quizzes/sample.json
+npx @ritwickrajmakhal/quiz-mcp create "Sample quiz" ./quizzes/sample.json
 
 # overwrite if the file already exists
-npx @quiz-mcp/cli create "Sample quiz" ./quizzes/sample.json --force
+npx @ritwickrajmakhal/quiz-mcp create "Sample quiz" ./quizzes/sample.json --force
 ```
 
 The generated file starts with a `$schema` entry so editors (VS Code, JetBrains)
