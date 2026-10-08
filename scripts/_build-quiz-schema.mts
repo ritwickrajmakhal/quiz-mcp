@@ -2,7 +2,7 @@ import { QuizSchema } from '@quiz-mcp/core';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 
 const JSON_SCHEMA_DRAFT = 'http://json-schema.org/draft-07/schema#';
-const SCHEMA_ID = 'https://raw.githubusercontent.com/karerckor/quiz-mcp/main/schema/quiz.schema.json';
+const SCHEMA_ID = 'https://raw.githubusercontent.com/ritwickrajmakhal/quiz-mcp/main/schema/quiz.schema.json';
 
 // Reused sub-schemas (BaseQuestionFields, Option, Attachment) get factored
 // into `definitions` via positional `$ref`s like `#/.../anyOf/0/properties/...`.

@@ -15,7 +15,7 @@ Run the bundled 7-question JavaScript basics quiz straight from GitHub:
 
 ```bash
 npx @quiz-mcp/runner \
-  --url https://raw.githubusercontent.com/karerckor/quiz-mcp/main/demo/js-quiz.json \
+  --url https://raw.githubusercontent.com/ritwickrajmakhal/quiz-mcp/main/demo/js-quiz.json \
   --output ./answers.json \
   --open
 ```
@@ -40,7 +40,7 @@ Add to `.mcp.json` in your project root (or `~/.claude.json` for user-wide):
     "quiz-mcp": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@quiz-mcp/cli", "mcp"]
+      "args": ["-y", "@ritwickrajmakhal/quiz-mcp", "mcp"]
     }
   }
 }
@@ -56,7 +56,7 @@ Add to `opencode.json` (project) or `~/.config/opencode/opencode.json` (global):
   "mcp": {
     "quiz-mcp": {
       "type": "local",
-      "command": ["npx", "-y", "@quiz-mcp/cli", "mcp"],
+      "command": ["npx", "-y", "@ritwickrajmakhal/quiz-mcp", "mcp"],
       "enabled": true
     }
   }
@@ -72,7 +72,7 @@ Open the MCP settings panel in Kilo Code (MCP Servers → Edit Global MCP) and a
   "mcpServers": {
     "quiz-mcp": {
       "command": "npx",
-      "args": ["-y", "@quiz-mcp/cli", "mcp"]
+      "args": ["-y", "@ritwickrajmakhal/quiz-mcp", "mcp"]
     }
   }
 }
@@ -80,52 +80,11 @@ Open the MCP settings panel in Kilo Code (MCP Servers → Edit Global MCP) and a
 
 The same `command`/`args` pair works for any MCP client that follows the standard `mcpServers` shape (Claude Desktop, Cursor, Windsurf, …).
 
-### Use the hosted remote MCP server
-
-If you don't want to install anything locally, there is a hosted, OAuth-protected version of quiz-mcp running on Cloudflare Workers:
-
-```
-https://quiz-mcp-oauth.karerckor.workers.dev/mcp
-```
-
-It exposes the same tools as the local server, plus `get_quizzes` and `cleanup_quiz` for managing per-user state. Each user gets an isolated quiz workspace; login is handled via WorkOS AuthKit on the first tool call.
-
-> **Note:** answers are persisted to Cloudflare KV, which is eventually consistent. After a user submits a quiz, `get_answers` may briefly return empty or stale data — wait a few seconds and retry if the model reports missing answers.
-
-<video width="320" height="240" controls>
-  <source src="docs/demo_remote.mp4" type="video/mp4">
-</video>
-
-#### Claude Code
-
-Register the remote server with the `claude` CLI (this stores it in `~/.claude.json`):
-
-```bash
-claude mcp add --transport http quiz-mcp-remote https://quiz-mcp-oauth.karerckor.workers.dev/mcp
-```
-
-Or add it manually to `.mcp.json` (project) / `~/.claude.json` (user-wide):
-
-```json
-{
-  "mcpServers": {
-    "quiz-mcp-remote": {
-      "type": "http",
-      "url": "https://quiz-mcp-oauth.karerckor.workers.dev/mcp"
-    }
-  }
-}
-```
-
-On the first call (e.g. `start_quiz`) Claude Code will open your browser for the OAuth flow; the access token is cached afterwards. Run `/mcp` inside Claude Code to inspect connection state or re-authenticate.
-
-Want to host your own instance? See [`apps/remote-mcp-oauth/README.md`](apps/remote-mcp-oauth/README.md) for the full setup (Cloudflare KV namespaces, WorkOS secrets, `wrangler deploy`).
-
 ### Scaffold and run your own quiz
 
 ```bash
 # scaffold a new quiz skeleton → ./javascript-basics.quiz.json
-npx @quiz-mcp/cli create "JavaScript basics"
+npx @ritwickrajmakhal/quiz-mcp create "JavaScript basics"
 
 # serve it in a browser and write answers to a file
 npx @quiz-mcp/runner --file ./javascript-basics.quiz.json --output ./answers.json --open
@@ -150,9 +109,9 @@ The runner exits with code `0` on success, `1` on load/validation failure, `2` i
 
 | Path | Package / App | Description |
 |---|---|---|
-| `apps/cli` | `@quiz-mcp/cli` | Published binary (`quiz-mcp`). MCP stdio server, lazy runner lifecycle, `create` scaffolding command. |
+| `apps/cli` | `@ritwickrajmakhal/quiz-mcp` | Published binary (`quiz-mcp`). MCP stdio server, lazy runner lifecycle, `create` scaffolding command. |
 | `apps/runner` | `@quiz-mcp/runner` | Standalone CLI that loads a quiz from a file/URL/stdin, serves it in a browser, and writes answers to a file or webhook. |
-| `apps/remote-mcp-oauth` | `@quiz-mcp/remote-mcp-oauth` | Cloudflare Worker hosting an OAuth-protected remote MCP server (WorkOS AuthKit + Durable Objects). Powers `https://quiz-mcp-oauth.karerckor.workers.dev`. |
+| `apps/remote-mcp-oauth` | `@quiz-mcp/remote-mcp-oauth` | Optional Cloudflare Worker hosting an OAuth-protected remote MCP server (WorkOS AuthKit + Durable Objects). |
 | `packages/core` | `@quiz-mcp/core` | Domain foundation: Zod schemas, types, grading engine, answer validation. Single source of truth for the quiz format. |
 | `packages/runner-api` | `@quiz-mcp/runner-api` | Hono HTTP server and SSR shell for the quiz runtime. REST endpoints, theming, i18n. Not published standalone. |
 | `packages/runner-ui` | `@quiz-mcp/runner-ui` | Vite/Hono-JSX client bundle. Hydrates the SSR shell and wires `<quiz-player>` events to the REST API. Assets only, not a runtime import. |
@@ -171,7 +130,7 @@ The runner exits with code `0` on success, `1` on load/validation failure, `2` i
 ## Development
 
 ```bash
-git clone https://github.com/karerckor/quiz-mcp.git
+git clone https://github.com/ritwickrajmakhal/quiz-mcp.git
 cd quiz-mcp
 pnpm install
 ```
@@ -210,7 +169,7 @@ pnpm schema:check  # validates the generated schema with AJV
 ```
 
 The schema is also available at the canonical URL embedded in the file:
-`https://raw.githubusercontent.com/karerckor/quiz-mcp/main/schema/quiz.schema.json`
+`https://raw.githubusercontent.com/ritwickrajmakhal/quiz-mcp/main/schema/quiz.schema.json`
 
 ## Package READMEs
 

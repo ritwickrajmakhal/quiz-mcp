@@ -76,7 +76,7 @@ can offer autocomplete and validation out of the box:
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/karerckor/quiz-mcp/main/schema/quiz.schema.json",
+  "$schema": "https://raw.githubusercontent.com/ritwickrajmakhal/quiz-mcp/main/schema/quiz.schema.json",
   "id": "...",
   "title": "Sample quiz",
   "questions": []
