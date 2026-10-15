@@ -9,6 +9,10 @@
       "svelte": "./src/index.ts",
       "default": "./src/index.ts"
     },
+    "./compiler": {
+      "types": "./dist/lib/shared/viz/compiler.d.ts",
+      "import": "./dist/lib/shared/viz/compiler.js"
+    },
     "./i18n": {
       "types": "./dist/lib/i18n.d.ts",
       "import": "./dist/lib/i18n.js"

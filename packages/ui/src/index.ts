@@ -16,3 +16,5 @@ export { default as Match } from './lib/questions/Match.svelte';
 export { default as Scale } from './lib/questions/Scale.svelte';
 export { default as Sorting } from './lib/questions/Sorting.svelte';
 export { default as Upload } from './lib/questions/Upload.svelte';
+
+export * from './lib/shared/viz/compiler.js';

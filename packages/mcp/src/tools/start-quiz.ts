@@ -9,6 +9,11 @@ import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import type { QuizService } from "@quiz-mcp/runner-api";
 import type { OpenBrowser } from "../open-browser.js";
 
+import {
+  validateQuizVisuals,
+  formatVisualErrors,
+} from "@quiz-mcp/ui/compiler";
+
 export type ServerUrlSource = string | (() => string);
 
 export type StartQuizDeps = {
@@ -17,10 +22,21 @@ export type StartQuizDeps = {
   openBrowser: OpenBrowser;
 };
 
-const inputSchema = z.object({
-  quiz: QuizDefinitionSchema,
-  open: z.boolean().default(true),
-});
+const inputSchema = z
+  .object({
+    quiz: QuizDefinitionSchema,
+    open: z.boolean().default(true),
+  })
+  .superRefine(async ({ quiz }, ctx) => {
+    const errors = await validateQuizVisuals(quiz);
+    for (const err of errors) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Visual syntax error at ${err.location} (attachment: "${err.attachmentId}", engine: "${err.engine}"):\n${err.message}`,
+        path: ["quiz"],
+      });
+    }
+  });
 
 const outputSchema = z.object({
   quizId: IdSchema,
@@ -36,7 +52,8 @@ export const startQuizConfig = {
     "the input. Returns the assigned quizId and the URL to open. The quiz " +
     "must match the schema returned by get_quiz_format. Quiz title, description, " +
     "question text, and option labels support Markdown, code blocks, and KaTeX math ($...$, $$...$$). " +
-    "Questions support rich diagrams and visuals (Graphviz trees/graphs/lists, Mermaid, raw SVG, HTML/Canvas) via attachment type 'viz'.",
+    "Questions support rich diagrams and visuals (Graphviz trees/graphs/lists, Mermaid, raw SVG, HTML/Canvas) via attachment type 'viz'. " +
+    "All diagram syntax (including Mermaid and Graphviz) is strictly validated and compiled before the quiz is created; any syntax errors are reported immediately.",
   inputSchema,
   outputSchema,
 } as const;
@@ -54,6 +71,19 @@ export function makeStartQuizHandler(deps: StartQuizDeps) {
     quiz: QuizDefinition;
     open: boolean;
   }): Promise<CallToolResult> => {
+    const visualErrors = await validateQuizVisuals(quiz);
+    if (visualErrors.length > 0) {
+      return {
+        isError: true,
+        content: [
+          {
+            type: "text" as const,
+            text: `Failed to start quiz due to visual syntax errors:\n${formatVisualErrors(visualErrors)}`,
+          },
+        ],
+      };
+    }
+
     const registered = await deps.service.registerQuiz(quiz);
     const url = `${trimSlash(resolveServerUrl(deps.serverUrl))}/${registered.id}`;
     let opened = false;

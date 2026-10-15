@@ -23,6 +23,7 @@
     "@modelcontextprotocol/sdk": "^1.12",
     "@quiz-mcp/core": "workspace:*",
     "@quiz-mcp/runner-api": "workspace:*",
+    "@quiz-mcp/ui": "workspace:*",
     "open": "^10",
     "zod": "^3",
     "zod-to-json-schema": "^3"

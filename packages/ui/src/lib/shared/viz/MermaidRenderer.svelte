@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { stripCodeFences } from './compiler.js';
 
   interface Props {
     content: string;
@@ -37,7 +38,7 @@
           },
         });
 
-        const { svg } = await mermaid.render(id, content.trim());
+        const { svg } = await mermaid.render(id, stripCodeFences(content));
         if (cancelled) return;
 
         if (container) {

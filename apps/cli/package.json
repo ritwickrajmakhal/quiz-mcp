@@ -1,6 +1,6 @@
 {
   "name": "@ritwickrajmakhal/quiz-mcp",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "type": "module",
   "main": "./dist/index.js",
   "bin": {
@@ -19,8 +19,11 @@
   "dependencies": {
     "@hono/node-server": "^1.19.14",
     "@modelcontextprotocol/sdk": "^1.12",
+    "@viz-js/viz": "^3.31.0",
     "commander": "^13",
+    "dompurify": "^3.4.16",
     "hono": "^4",
+    "mermaid": "^12.1.0",
     "open": "^10",
     "zod": "^3",
     "zod-to-json-schema": "^3"
@@ -30,6 +33,7 @@
     "@quiz-mcp/mcp": "workspace:*",
     "@quiz-mcp/runner-api": "workspace:*",
     "@quiz-mcp/runner-ui": "workspace:*",
+    "@quiz-mcp/ui": "workspace:*",
     "@types/node": "^25.6.0",
     "tsup": "^8",
     "typescript": "^5.8",

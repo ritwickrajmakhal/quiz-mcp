@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { stripCodeFences } from './compiler.js';
 
   interface Props {
     dot: string;
@@ -23,7 +24,7 @@
         if (cancelled) return;
 
         // Render DOT to SVG element
-        const svgElement = viz.renderSVGElement(dot);
+        const svgElement = viz.renderSVGElement(stripCodeFences(dot));
 
         // Make SVG responsive and theme-friendly without vertical blowout
         svgElement.removeAttribute('width');

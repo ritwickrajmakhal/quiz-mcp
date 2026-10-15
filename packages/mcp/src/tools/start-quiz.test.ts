@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import type { Answer, Quiz, QuizDefinition } from "@quiz-mcp/core";
 import type { QuizService, QuizState } from "@quiz-mcp/runner-api";
-import { makeStartQuizHandler } from "./start-quiz.js";
+import { makeStartQuizHandler, startQuizConfig } from "./start-quiz.js";
 
 const QUIZ_DEFINITION: QuizDefinition = {
   title: "T",
@@ -147,5 +147,128 @@ describe("start_quiz handler", () => {
     // service assigns a fresh one each call.
     expect(openBrowser).toHaveBeenNthCalledWith(1, "http://resolved.example/q1");
     expect(openBrowser).toHaveBeenNthCalledWith(2, "http://resolved.example/q1-1");
+  });
+
+  it("rejects quiz with broken Mermaid syntax and does not register or open browser", async () => {
+    const { service, quizzes } = fakeService();
+    const openBrowser = vi.fn();
+    const handler = makeStartQuizHandler({
+      service,
+      serverUrl: "http://localhost:3000",
+      openBrowser,
+    });
+
+    const brokenQuiz: QuizDefinition = {
+      title: "Broken Mermaid Quiz",
+      questions: [
+        {
+          _kind: "single_choice",
+          id: "q-bad",
+          text: "What is this?",
+          mode: "list",
+          required: true,
+          options: [{ id: "1", label: "A" }, { id: "2", label: "B" }],
+          attachments: [
+            [
+              {
+                id: "v-bad",
+                type: "viz",
+                engine: "mermaid",
+                content: "graph TD\n  [bad node syntax",
+              },
+            ],
+          ],
+        },
+      ],
+    };
+
+    const result = await handler({ quiz: brokenQuiz, open: true });
+    expect(result.isError).toBe(true);
+    const firstContent = result.content[0];
+    expect(firstContent.type).toBe("text");
+    if (firstContent.type === "text") {
+      expect(firstContent.text).toContain("Visualization compilation/syntax errors found");
+      expect(firstContent.text).toContain("q-bad");
+      expect(firstContent.text).toContain("v-bad");
+    }
+    expect(openBrowser).not.toHaveBeenCalled();
+    expect(quizzes.size).toBe(0);
+  });
+
+  it("inputSchema rejects invalid Mermaid diagram via safeParseAsync", async () => {
+    const brokenQuiz: QuizDefinition = {
+      title: "Broken Mermaid Quiz",
+      questions: [
+        {
+          _kind: "single_choice",
+          id: "q-bad",
+          text: "What is this?",
+          mode: "list",
+          required: true,
+          options: [{ id: "1", label: "A" }, { id: "2", label: "B" }],
+          attachments: [
+            [
+              {
+                id: "v-bad",
+                type: "viz",
+                engine: "mermaid",
+                content: "graph TD\n  [bad node syntax",
+              },
+            ],
+          ],
+        },
+      ],
+    };
+
+    const parseResult = await startQuizConfig.inputSchema.safeParseAsync({
+      quiz: brokenQuiz,
+      open: true,
+    });
+
+    expect(parseResult.success).toBe(false);
+    if (!parseResult.success) {
+      expect(parseResult.error.issues[0].message).toContain("Visual syntax error");
+      expect(parseResult.error.issues[0].message).toContain("q-bad");
+      expect(parseResult.error.issues[0].message).toContain("v-bad");
+    }
+  });
+
+  it("successfully starts quiz when Mermaid diagram is valid", async () => {
+    const { service, quizzes } = fakeService("valid-quiz");
+    const openBrowser = vi.fn().mockResolvedValue(undefined);
+    const handler = makeStartQuizHandler({
+      service,
+      serverUrl: "http://localhost:3000",
+      openBrowser,
+    });
+
+    const validQuiz: QuizDefinition = {
+      title: "Valid Mermaid Quiz",
+      questions: [
+        {
+          _kind: "single_choice",
+          id: "q-good",
+          text: "What is this?",
+          mode: "list",
+          required: true,
+          options: [{ id: "1", label: "A" }, { id: "2", label: "B" }],
+          attachments: [
+            [
+              {
+                id: "v-good",
+                type: "viz",
+                engine: "mermaid",
+                content: "graph TD\n  A[Start] --> B[Finish]",
+              },
+            ],
+          ],
+        },
+      ],
+    };
+
+    const result = await handler({ quiz: validQuiz, open: true });
+    expect(result.isError).toBeUndefined();
+    expect(quizzes.get("valid-quiz")).toBeDefined();
+    expect(openBrowser).toHaveBeenCalledTimes(1);
   });
 });

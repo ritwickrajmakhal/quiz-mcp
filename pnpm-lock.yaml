@@ -50,12 +50,21 @@ importers:
       '@modelcontextprotocol/sdk':
         specifier: ^1.12
         version: 1.29.0(@cfworker/json-schema@4.1.1)(supports-color@10.2.2)(zod@3.25.76)
+      '@viz-js/viz':
+        specifier: ^3.31.0
+        version: 3.31.0
       commander:
         specifier: ^13
         version: 13.1.0
+      dompurify:
+        specifier: ^3.4.16
+        version: 3.4.16
       hono:
         specifier: ^4
         version: 4.12.14
+      mermaid:
+        specifier: ^12.1.0
+        version: 12.1.0
       open:
         specifier: ^10
         version: 10.2.0
@@ -78,6 +87,9 @@ importers:
       '@quiz-mcp/runner-ui':
         specifier: workspace:*
         version: link:../../packages/runner-ui
+      '@quiz-mcp/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       '@types/node':
         specifier: ^25.6.0
         version: 25.6.0
@@ -116,7 +128,7 @@ importers:
         version: 8.13.0
       agents:
         specifier: ^0.9.0
-        version: 0.9.0(@babel/core@7.29.0(supports-color@10.2.2))(@babel/runtime@7.29.2)(@cloudflare/workers-types@4.20260426.1)(ai@6.0.168(zod@3.25.76))(react@19.2.5)(rolldown@1.0.0-rc.17)(supports-color@10.2.2)(zod@3.25.76)
+        version: 0.9.0(@babel/core@7.29.0(supports-color@10.2.2))(@babel/runtime@7.29.2)(@cloudflare/workers-types@4.20260426.1)(ai@6.0.168(zod@3.25.76))(react@19.2.5)(rolldown@1.0.0-rc.17)(supports-color@10.2.2)(vite@5.4.21(@types/node@25.6.0)(lightningcss@1.32.0))(zod@3.25.76)
       hono:
         specifier: ^4.12.9
         version: 4.12.14
@@ -204,6 +216,9 @@ importers:
       '@quiz-mcp/runner-api':
         specifier: workspace:*
         version: link:../runner-api
+      '@quiz-mcp/ui':
+        specifier: workspace:*
+        version: link:../ui
       open:
         specifier: ^10
         version: 10.2.0
@@ -4886,13 +4901,14 @@ snapshots:
   '@rolldown/binding-win32-x64-msvc@1.0.0-rc.17':
     optional: true
 
-  '@rolldown/plugin-babel@0.2.3(@babel/core@7.29.0(supports-color@10.2.2))(@babel/runtime@7.29.2)(rolldown@1.0.0-rc.17)':
+  '@rolldown/plugin-babel@0.2.3(@babel/core@7.29.0(supports-color@10.2.2))(@babel/runtime@7.29.2)(rolldown@1.0.0-rc.17)(vite@5.4.21(@types/node@25.6.0)(lightningcss@1.32.0))':
     dependencies:
       '@babel/core': 7.29.0(supports-color@10.2.2)
       picomatch: 4.0.4
       rolldown: 1.0.0-rc.17
     optionalDependencies:
       '@babel/runtime': 7.29.2
+      vite: 5.4.21(@types/node@25.6.0)(lightningcss@1.32.0)
 
   '@rolldown/pluginutils@1.0.0-rc.17': {}
 
@@ -5294,12 +5310,12 @@ snapshots:
 
   acorn@8.16.0: {}
 
-  agents@0.9.0(@babel/core@7.29.0(supports-color@10.2.2))(@babel/runtime@7.29.2)(@cloudflare/workers-types@4.20260426.1)(ai@6.0.168(zod@3.25.76))(react@19.2.5)(rolldown@1.0.0-rc.17)(supports-color@10.2.2)(zod@3.25.76):
+  agents@0.9.0(@babel/core@7.29.0(supports-color@10.2.2))(@babel/runtime@7.29.2)(@cloudflare/workers-types@4.20260426.1)(ai@6.0.168(zod@3.25.76))(react@19.2.5)(rolldown@1.0.0-rc.17)(supports-color@10.2.2)(vite@5.4.21(@types/node@25.6.0)(lightningcss@1.32.0))(zod@3.25.76):
     dependencies:
       '@babel/plugin-proposal-decorators': 7.29.0(@babel/core@7.29.0(supports-color@10.2.2))(supports-color@10.2.2)
       '@cfworker/json-schema': 4.1.1
       '@modelcontextprotocol/sdk': 1.29.0(@cfworker/json-schema@4.1.1)(supports-color@10.2.2)(zod@3.25.76)
-      '@rolldown/plugin-babel': 0.2.3(@babel/core@7.29.0(supports-color@10.2.2))(@babel/runtime@7.29.2)(rolldown@1.0.0-rc.17)
+      '@rolldown/plugin-babel': 0.2.3(@babel/core@7.29.0(supports-color@10.2.2))(@babel/runtime@7.29.2)(rolldown@1.0.0-rc.17)(vite@5.4.21(@types/node@25.6.0)(lightningcss@1.32.0))
       ai: 6.0.168(zod@3.25.76)
       cron-schedule: 6.0.0
       json-schema: 0.4.0
@@ -5312,6 +5328,8 @@ snapshots:
       react: 19.2.5
       yargs: 18.0.0
       zod: 3.25.76
+    optionalDependencies:
+      vite: 5.4.21(@types/node@25.6.0)(lightningcss@1.32.0)
     transitivePeerDependencies:
       - '@babel/core'
       - '@babel/plugin-transform-runtime'
